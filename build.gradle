@@ -6,6 +6,25 @@ plugins {
     id 'org.jetbrains.kotlin.plugin.serialization' version '1.8.0'
 }
 
+sourceSets {
+    mm {
+        java {
+            srcDir 'src/mm/java'
+        }
+        resources {
+            srcDir 'src/mm/resources'
+        }
+    }
+    mcore {
+        java {
+            srcDir 'src/mcore/core'
+        }
+        resources {
+            srcDir 'src/mcore/resources'
+        }
+    }
+}
+
 version = '1.0.0'
 group = 'example.examplemod'
 archivesBaseName = 'examplemod'
@@ -28,8 +47,11 @@ minecraft {
             property 'forge.enabledGameTestNamespaces', 'examplemod'
 
             mods {
-                examplemod {
-                    source sourceSets.main
+                mm {
+                    source sourceSets.mm
+                }
+                mcore {
+                    source sourceSets.mcore
                 }
             }
         }
@@ -42,8 +64,11 @@ minecraft {
             property 'forge.enabledGameTestNamespaces', 'examplemod'
 
             mods {
-                examplemod {
-                    source sourceSets.main
+                mm {
+                    source sourceSets.mm
+                }
+                mcore {
+                    source sourceSets.mcore
                 }
             }
         }
@@ -56,8 +81,11 @@ minecraft {
             property 'forge.enabledGameTestNamespaces', 'examplemod'
 
             mods {
-                examplemod {
-                    source sourceSets.main
+                mm {
+                    source sourceSets.mm
+                }
+                mcore {
+                    source sourceSets.mcore
                 }
             }
         }
@@ -71,8 +99,11 @@ minecraft {
             args '--mod', 'examplemod', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources')
 
             mods {
-                examplemod {
-                    source sourceSets.main
+                mm {
+                    source sourceSets.mm
+                }
+                mcore {
+                    source sourceSets.mcore
                 }
             }
         }
@@ -117,4 +148,15 @@ jar {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+}
+
+task mcoreJar(type: Jar) {
+    from sourceSets.mcore.output
+    baseName = 'mcore'
+}
+
+jar.dependsOn(mcoreJar)
+
+artifacts {
+    archives  mcoreJar
 }
